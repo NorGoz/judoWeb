@@ -21,6 +21,7 @@ const CalendarSection = () => {
     value: Value,
     event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
+    console.log(value, event);
     if (value instanceof Date) {
       setDate(value);
     } else if (Array.isArray(value) && value[0] instanceof Date) {

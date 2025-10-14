@@ -11,12 +11,6 @@ const Section = styled.section`
   padding: 0;
 `;
 
-const Title = styled.h3`
-  color: #004aad;
-  font-weight: 700;
-  margin-bottom: 12px;
-`;
-
 const Gallery = () => {
   const images = [img1, img2, img3, img4, img5];
 
