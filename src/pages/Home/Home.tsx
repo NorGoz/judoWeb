@@ -1,6 +1,8 @@
 import React from "react";
 import Gallery from "../../components/GallerySection/Gallery";
 import styled from "styled-components";
+import NewsSection from "../News/NewsSection";
+import { BREAKPOINTS } from "../../styles/breakpoints";
 
 export const HomeWrapper = styled.main`
   display: flex;
@@ -10,118 +12,28 @@ export const HomeWrapper = styled.main`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-`;
+  @media (max-width: ${BREAKPOINTS.tablet}) {
+    gap: 40px;
+    padding: 16px;
+  }
 
-export const Section = styled.section`
-  background: white;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
-`;
-
-export const SectionTitle = styled.h3`
-  margin-bottom: 25px;
-  font-size: 24px;
-  color: #004aad;
-  font-weight: 700;
-  position: relative;
-  padding-bottom: 10px;
-
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, #004aad, #00a8ff);
-    border-radius: 2px;
+  @media (max-width: ${BREAKPOINTS.mobile}) {
+    gap: 32px;
+    padding: 12px;
   }
 `;
 
-export const NewsGrid = styled.div`
-  display: grid;
-  gap: 25px;
-`;
-
-export const NewsCard = styled.article`
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background: #f8fafc;
-  border-radius: 12px;
-  border-left: 4px solid #004aad;
-  transition: all 0.3s ease;
-  cursor: pointer;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 74, 173, 0.15);
-    background: white;
-  }
-`;
-
-export const NewsDate = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 70px;
-  padding: 10px;
-  background: #004aad;
-  color: white;
-  border-radius: 8px;
-  text-align: center;
-
-  .day {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .month {
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-`;
-
-export const NewsContent = styled.div`
-  flex: 1;
-`;
-
-export const NewsTitle = styled.h4`
-  font-size: 18px;
-  font-weight: 600;
-  color: #1a202c;
-  margin-bottom: 8px;
-  line-height: 1.4;
-`;
-
-export const NewsExcerpt = styled.p`
-  color: #718096;
-  line-height: 1.6;
-  margin-bottom: 12px;
-`;
-
-export const NewsMeta = styled.div`
-  display: flex;
-  gap: 15px;
-  font-size: 14px;
-  color: #a0aec0;
-
-  .category {
-    color: #004aad;
-    font-weight: 500;
-    background: #e6f2ff;
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-`;
+export interface NewsItem {
+  id: number;
+  day: string;
+  month: string;
+  title: string;
+  excerpt: string;
+  category: string;
+}
 
 const Home = () => {
-  const news = [
+  const newss = [
     {
       id: 1,
       day: "15",
@@ -163,28 +75,7 @@ const Home = () => {
   return (
     <HomeWrapper>
       <Gallery />
-
-      <Section>
-        <SectionTitle>Aktualności</SectionTitle>
-        <NewsGrid>
-          {news.map((item) => (
-            <NewsCard key={item.id}>
-              <NewsDate>
-                <span className="day">{item.day}</span>
-                <span className="month">{item.month}</span>
-              </NewsDate>
-              <NewsContent>
-                <NewsTitle>{item.title}</NewsTitle>
-                <NewsExcerpt>{item.excerpt}</NewsExcerpt>
-                <NewsMeta>
-                  <span className="category">{item.category}</span>
-                  <span>Czytaj więcej →</span>
-                </NewsMeta>
-              </NewsContent>
-            </NewsCard>
-          ))}
-        </NewsGrid>
-      </Section>
+      <NewsSection />
     </HomeWrapper>
   );
 };

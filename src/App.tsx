@@ -1,15 +1,22 @@
 import React from "react";
 import { GlobalStyle } from "./styles/GlobalStyles";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { HeadProvider } from "react-head";
 import Home from "./pages/Home/Home";
 import Header from "./components/Header/Header";
 import styled from "styled-components";
 import SponsorSection from "./components/SponsorSection/SponsorSection";
 import Contact from "./pages/Contact/Contact";
-import Tuliszkow from "./components/TuliszkowSection/Tuliszkow";
-import TuliszkowSave from "./components/TuliszkowSection/TuliszkowSave";
+
+import { CalendarRychwal } from "./components/CalendarSection/CalendarRychwal/CalendarRychwal";
+import { CalendarTuliszkow } from "./components/CalendarSection/CalendarTuliszkow/CalendarTuliszkow";
+import { CalendarStawiszyn } from "./components/CalendarSection/CalendarStawiszyn/CalendarStawiszyn";
+import { CalendarWladyslawow } from "./components/CalendarSection/CalendarWladyslawow/CalendarWladyslawow";
+import { CalendarGrodziec } from "./components/CalendarSection/CalendarGrodziec/CalendarGrodziec";
+import { CalendarMalanow } from "./components/CalendarSection/CalendarMalanow/CalendarMalanow";
+import DocumentsSection from "./pages/Document/Document";
+import { BREAKPOINTS } from "./styles/breakpoints";
 
 const AppWrapper = styled.div`
   display: flex;
@@ -23,26 +30,42 @@ const AppWrapper = styled.div`
   /* background: linear-gradient(135deg, #001845 0%, #004aad 40%, #00b4d8 100%);
   background-attachment: fixed; */
   min-height: 80vh;
+  /* TABLET */
+  @media (max-width: ${BREAKPOINTS.tablet}) {
+    flex-direction: column;
+    padding: 20px;
+    gap: 32px;
+  }
+
+  /* MOBILE */
+  @media (max-width: ${BREAKPOINTS.mobile}) {
+    padding: 16px;
+    gap: 24px;
+  }
+  @media (max-width: 375px) {
+    padding: 5px;
+  }
 `;
 
 const App = () => {
   return (
     <HeadProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/judoWeb">
         <GlobalStyle />
         <Header />
         <AppWrapper>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/kontakt" element={<Contact />} />
-            <Route path="/tuliszkow" element={<Tuliszkow />} />
-            <Route path="/tuliszkow/:action" element={<TuliszkowSave />} />
-            <Route path="/rychwal/" element={<Tuliszkow />} />
-            <Route path="/rychwal/:action" element={<TuliszkowSave />} />
-            <Route path="/malanow/" element={<Tuliszkow />} />
-            <Route path="/malanow/:action" element={<TuliszkowSave />} />
-            <Route path="/przykona/" element={<Tuliszkow />} />
-            <Route path="/przykona/:action" element={<TuliszkowSave />} />
+            <Route path="/tuliszkow" element={<CalendarTuliszkow />} />
+            <Route path="/stawiszyn" element={<CalendarStawiszyn />} />
+            <Route path="/grodziec" element={<CalendarGrodziec />} />
+            <Route path="/wladyslawow" element={<CalendarWladyslawow />} />
+            <Route path="/rychwal/" element={<CalendarRychwal />} />
+
+            <Route path="/malanow/" element={<CalendarMalanow />} />
+            <Route path="/document" element={<DocumentsSection />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <SponsorSection />
         </AppWrapper>

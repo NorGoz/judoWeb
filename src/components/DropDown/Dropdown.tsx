@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { slugify } from "../../utils/slugify";
+import { BREAKPOINTS } from "../../styles/breakpoints";
 
 const DropdownWrapper = styled.div`
   position: relative;
@@ -16,9 +17,13 @@ const DropdownButton = styled.div`
   user-select: none;
   opacity: 0.9;
   transition: all 0.2s ease;
+  font-size: 16px;
   &:hover {
     transform: scale(1.1);
     opacity: 1;
+  }
+  @media (max-width: 1440px) {
+    font-size: 14px;
   }
 `;
 
@@ -65,7 +70,7 @@ const Dropdown = ({ label, items, url }: DropdownProps) => {
   return (
     <DropdownWrapper>
       <DropdownButton
-        onClick={() => (url ? navigate(url) : console.log("nic sie nei dzije"))}
+        onClick={() => (url ? navigate(url) : console.log("nic sie nie dzije"))}
       >
         {label}
       </DropdownButton>
