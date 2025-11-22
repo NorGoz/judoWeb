@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { slugify } from "../../utils/slugify";
-import { BREAKPOINTS } from "../../styles/breakpoints";
 
 const DropdownWrapper = styled.div`
   position: relative;

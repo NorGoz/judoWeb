@@ -33,45 +33,6 @@ export interface NewsItem {
 }
 
 const Home = () => {
-  const newss = [
-    {
-      id: 1,
-      day: "15",
-      month: "MAR",
-      title: "Mistrzostwa Polski Seniorów w Judo 2024",
-      excerpt:
-        "Zapraszamy wszystkich zawodników na nadchodzące Mistrzostwa Polski, które odbędą się w Warszawie. Zgłoszenia przyjmowane są do 30 marca.",
-      category: "Zawody",
-    },
-    {
-      id: 2,
-      day: "22",
-      month: "MAR",
-      title: "Seminarium techniczne z mistrzem świata",
-      excerpt:
-        "Wyjątkowa okazja do treningu pod okiem mistrza świata - Adam Smith. Seminarium obejmuje zaawansowane techniki rzutów i trzymań.",
-      category: "Szkolenie",
-    },
-    {
-      id: 3,
-      day: "05",
-      month: "KWI",
-      title: "Nowe grupy treningowe dla dzieci i młodzieży",
-      excerpt:
-        "Ruszyły zapisy do nowych grup treningowych. Zajęcia prowadzone są przez doświadczonych trenerów z podejściem pedagogicznym.",
-      category: "Rekrutacja",
-    },
-    {
-      id: 4,
-      day: "12",
-      month: "KWI",
-      title: "Turniej Młodzików - zapisy otwarte",
-      excerpt:
-        "Zapraszamy młodych adeptów judo do udziału w tradycyjnym wiosennym turnieju. Nagrody i puchary dla najlepszych.",
-      category: "Zawody",
-    },
-  ];
-
   return (
     <HomeWrapper>
       <Gallery />
