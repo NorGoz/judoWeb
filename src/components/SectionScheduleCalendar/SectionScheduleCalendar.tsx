@@ -25,7 +25,6 @@ const fadeInUp = keyframes`
 
 const Wrapper = styled.section`
   background: #ffffff;
-
   padding: 32px 20px;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -156,6 +155,7 @@ const DayCell = styled.button<{
   isSelected?: boolean;
 }>`
   border: none;
+  min-height: 36px;
   border-radius: 8px;
   padding: 6px 0;
   font-size: 13px;
@@ -185,6 +185,7 @@ const DayCell = styled.button<{
   @media (max-width: 480px) {
     padding: 4px 0;
     font-size: 12px;
+    min-height: auto;
   }
 `;
 
@@ -337,20 +338,29 @@ const SectionScheduleCalendar: React.FC<SectionScheduleCalendarProps> = ({
   sectionName,
   schedule,
 }) => {
-  const today = new Date();
-  const [viewDate, setViewDate] = useState(
-    new Date(today.getFullYear(), today.getMonth(), 1)
+  const now = new Date();
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    0,
+    0,
+    0,
+    0
   );
-  const [selectedDate, setSelectedDate] = useState<Date | null>(today);
+
+  const [viewDate, setViewDate] = useState(
+    new Date(now.getFullYear(), now.getMonth(), 1)
+  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(now);
 
   const monthDays = useMemo(
     () => generateMonthDays(viewDate.getFullYear(), viewDate.getMonth()),
     [viewDate]
   );
 
-  // najbliższe zajęcia (np. top 3)
+  // 🔹 Najbliższe zajęcia – już liczone od "teraz", więc zawsze przyszłość
   const upcoming = useMemo(() => {
-    const now = new Date();
     const enriched = schedule.map((cls) => ({
       cls,
       next: getNextOccurrence(cls, now),
@@ -359,21 +369,53 @@ const SectionScheduleCalendar: React.FC<SectionScheduleCalendarProps> = ({
     enriched.sort((a, b) => a.next.getTime() - b.next.getTime());
 
     return enriched.slice(0, 3);
-  }, [schedule]);
+  }, [schedule, now]);
 
+  // 🔹 Zajęcia dla wybranego dnia – NIE pokazujemy przeszłości
   const classesForDate = useMemo(() => {
     if (!selectedDate) return [];
+
+    // jeśli dzień w przeszłości: nic nie pokazujemy
+    if (selectedDate < startOfToday) {
+      return [];
+    }
+
     const dow = selectedDate.getDay();
 
-    return schedule
-      .filter((cls) => cls.day === dow)
-      .slice()
-      .sort((a, b) => {
-        const [ah, am] = a.time.split("–")[0].split(":").map(Number);
-        const [bh, bm] = b.time.split("–")[0].split(":").map(Number);
-        return ah * 60 + am - (bh * 60 + bm);
-      });
-  }, [selectedDate, schedule]);
+    const classesInDay = schedule.filter((cls) => cls.day === dow);
+
+    // jeśli wybrany dzień to dzisiaj – filtrujemy godziny, które już minęły
+    const isToday =
+      selectedDate.getFullYear() === now.getFullYear() &&
+      selectedDate.getMonth() === now.getMonth() &&
+      selectedDate.getDate() === now.getDate();
+
+    const filtered = classesInDay.filter((cls) => {
+      if (!isToday) return true; // przyszłe dni – wszystkie zajęcia
+
+      const [h, m] = cls.time.split("–")[0].split(":").map(Number);
+      const classDateTime = new Date(selectedDate);
+      classDateTime.setHours(h, m, 0, 0);
+      return classDateTime >= now; // tylko te, które jeszcze się odbędą
+    });
+
+    return filtered.slice().sort((a, b) => {
+      const [ah, am] = a.time.split("–")[0].split(":").map(Number);
+      const [bh, bm] = b.time.split("–")[0].split(":").map(Number);
+      return ah * 60 + am - (bh * 60 + bm);
+    });
+  }, [selectedDate, schedule, now, startOfToday]);
+
+  // 🔹 Dzień ma zajęcia tylko jeśli na ten konkretny dzień jest JAKIŚ termin w przyszłości
+  const hasClassesOnDay = (d: Date) => {
+    return schedule.some((cls) => {
+      if (cls.day !== d.getDay()) return false;
+      const [h, m] = cls.time.split("–")[0].split(":").map(Number);
+      const classDateTime = new Date(d);
+      classDateTime.setHours(h, m, 0, 0);
+      return classDateTime >= now; // tylko przyszłość / dziś w przyszłej godzinie
+    });
+  };
 
   const goPrevMonth = () => {
     setViewDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
@@ -388,15 +430,12 @@ const SectionScheduleCalendar: React.FC<SectionScheduleCalendarProps> = ({
     a.getMonth() === b.getMonth() &&
     a.getDate() === b.getDate();
 
-  const hasClassesOnDay = (d: Date) =>
-    schedule.some((cls) => cls.day === d.getDay());
-
   return (
     <Wrapper>
       <HeaderRow>
         <Title>Kalendarz – sekcja {sectionName}</Title>
         <TodayLabel>
-          Dzisiaj: <Strong>{formatDateLabel(today)}</Strong>
+          Dzisiaj: <Strong>{formatDateLabel(now)}</Strong>
         </TodayLabel>
       </HeaderRow>
 
@@ -425,7 +464,7 @@ const SectionScheduleCalendar: React.FC<SectionScheduleCalendarProps> = ({
           <DaysGrid>
             {monthDays.map((d, idx) => {
               const inCurrentMonth = d.getMonth() === viewDate.getMonth();
-              const isTodayFlag = isSameDay(d, today);
+              const isTodayFlag = isSameDay(d, now);
               const isSelected = selectedDate && isSameDay(d, selectedDate);
               const hasCls = hasClassesOnDay(d);
 
@@ -448,7 +487,7 @@ const SectionScheduleCalendar: React.FC<SectionScheduleCalendarProps> = ({
 
         <SidePanel>
           <SideTitle>
-            Najbliższe zajęcia <Small>{`(dla sekcji ${sectionName} )`}</Small>
+            Najbliższe zajęcia <Small>{`(dla sekcji ${sectionName})`}</Small>
           </SideTitle>
 
           {upcoming.length === 0 && (
@@ -474,7 +513,9 @@ const SectionScheduleCalendar: React.FC<SectionScheduleCalendarProps> = ({
             </SelectedDayTitle>
 
             {selectedDate && classesForDate.length === 0 && (
-              <NoClassesText>Brak zajęć w tym dniu.</NoClassesText>
+              <NoClassesText>
+                Brak nadchodzących zajęć w tym dniu.
+              </NoClassesText>
             )}
 
             {selectedDate &&
