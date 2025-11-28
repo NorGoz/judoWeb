@@ -3,7 +3,6 @@ import styled, { keyframes } from "styled-components";
 
 // --------- ANIMACJE ----------
 
-// miękkie wejście całej sekcji (przy zmianie strony / route'a)
 const fadeInUp = keyframes`
   from {
     opacity: 0;
@@ -15,13 +14,11 @@ const fadeInUp = keyframes`
   }
 `;
 
-// overlay modala
 const fadeInOverlay = keyframes`
   from { opacity: 0; }
   to { opacity: 1; }
 `;
 
-// pojawianie się okienka modala
 const scaleInModal = keyframes`
   from {
     opacity: 0;
@@ -42,15 +39,14 @@ const Wrapper = styled.section`
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   margin: 40px auto;
   max-width: 900px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;
-
-  /* 🔹 animacja wejścia sekcji (działa przy każdym wejściu na stronę) */
   animation: ${fadeInUp} 0.25s ease-out;
 
   @media (max-width: 768px) {
-    margin: 24px auto;
+    margin: 0px;
     padding: 24px 16px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -88,6 +84,7 @@ const DaysWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  width: 100%;
   justify-content: center;
 
   @media (max-width: 768px) {
@@ -96,21 +93,20 @@ const DaysWrapper = styled.div`
   }
 `;
 
-const DayCard = styled.div`
-  flex: 1 1 400px;
+// teraz to jest „karta typu zajęć”
+const ActivityCard = styled.div`
+  flex: 1 1 320px;
   background: #f4f7fb;
   border-radius: 8px;
   padding: 20px;
   border-left: 6px solid #0a3978;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  min-width: 500px;
+  gap: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   @media (max-width: 900px) {
     flex: 1 1 100%;
-    min-width: 0;
   }
 
   @media (max-width: 768px) {
@@ -126,55 +122,35 @@ const DayCard = styled.div`
   }
 `;
 
-const DayTitle = styled.h3`
+const ActivityTitle = styled.h3`
   color: #0a3978;
   font-size: 20px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  padding-bottom: 5px;
+  margin: 0 0 4px;
 
   @media (max-width: 768px) {
     font-size: 18px;
   }
 `;
 
-const List = styled.ul`
-  list-style: none;
-  padding: 0;
+const ActivityMeta = styled.p`
   margin: 0;
-`;
-
-const Item = styled.li`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  border-radius: 6px;
-  padding: 8px 12px;
-  margin-bottom: 6px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
-  transition: background 0.15s ease, transform 0.15s ease;
-
-  @media (max-width: 768px) {
-    padding: 8px 10px;
-  }
-
-  @media (hover: hover) {
-    &:hover {
-      background: #f1f5ff;
-      transform: translateY(-1px);
-    }
-  }
-`;
-
-const Time = styled.span`
-  color: #555;
-  font-weight: 500;
   font-size: 14px;
+  color: #555;
+
+  span.label {
+    font-weight: 600;
+    color: #0a3978;
+  }
 
   @media (max-width: 768px) {
     font-size: 13px;
   }
+`;
+
+const ActivityFooter = styled.div`
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const Button = styled.button`
@@ -219,7 +195,6 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 100;
-
   animation: ${fadeInOverlay} 0.2s ease-out;
 `;
 
@@ -230,7 +205,6 @@ const ModalContent = styled.div`
   width: 100%;
   padding: 24px 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-
   animation: ${scaleInModal} 0.2s ease-out;
 
   @media (max-width: 600px) {
@@ -279,6 +253,20 @@ const Input = styled.input`
   padding: 7px 9px;
   font-size: 14px;
   outline: none;
+
+  &:focus {
+    border-color: #0a3978;
+    box-shadow: 0 0 0 1px rgba(10, 57, 120, 0.2);
+  }
+`;
+
+const Select = styled.select`
+  border-radius: 6px;
+  border: 1px solid #ccd3e0;
+  padding: 7px 9px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
 
   &:focus {
     border-color: #0a3978;
@@ -345,7 +333,7 @@ const SmallInfo = styled.p`
 `;
 
 // --------------------------------------
-// Typy i stałe (jak u Ciebie)
+// Typy i stałe
 // --------------------------------------
 
 export interface IClassItem {
@@ -392,7 +380,6 @@ export const getNextClassDate = (day: number, time: string): string => {
   return next.toISOString().slice(0, 10);
 };
 
-// URL do Apps Script – bez zmian
 const SIGNUP_ENDPOINT =
   import.meta.env.VITE_SIGNUP_ENDPOINT ??
   "https://script.google.com/macros/s/AKfycbwbk2Qxuf_eT0K5uK5Kf0NSRafMW2tvzmr6-Dch-mCO3BhYPsQGpUQpbNpMNOChdbpL/exec";
@@ -418,7 +405,7 @@ const INITIAL_FORM: IFormState = {
 };
 
 // --------------------------------------
-// Komponent główny – logika bez zmian
+// Komponent główny – grupowanie po typie zajęć
 // --------------------------------------
 
 export const CalendarSection: React.FC<CalendarSectionProps> = ({
@@ -430,7 +417,17 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
   schedule,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedClass, setSelectedClass] = useState<IClassItem | null>(null);
+
+  // wybrany typ zajęć (np. "Akrobatyka – początkująca")
+  const [selectedActivityTitle, setSelectedActivityTitle] = useState<
+    string | null
+  >(null);
+  // wszystkie wpisy z grafiku dla danego typu (różne dni)
+  const [activityItems, setActivityItems] = useState<IClassItem[]>([]);
+  // unikalne godziny dla danego typu
+  const [timeOptions, setTimeOptions] = useState<string[]>([]);
+  const [selectedTimeIndex, setSelectedTimeIndex] = useState(0);
+
   const [form, setForm] = useState<IFormState>(INITIAL_FORM);
   const [status, setStatus] = useState<null | {
     type: "success" | "error";
@@ -438,13 +435,27 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
   }>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const grouped = schedule.reduce<Record<number, IClassItem[]>>((acc, item) => {
-    acc[item.day] = acc[item.day] ? [...acc[item.day], item] : [item];
-    return acc;
-  }, {});
+  // 🔹 grupujemy po tytule zajęć, nie po dniu
+  const groupedByTitle = schedule.reduce<Record<string, IClassItem[]>>(
+    (acc, item) => {
+      if (!acc[item.title]) acc[item.title] = [];
+      acc[item.title].push(item);
+      return acc;
+    },
+    {}
+  );
 
-  const openModal = (cls: IClassItem) => {
-    setSelectedClass(cls);
+  const openModal = (title: string) => {
+    const items = groupedByTitle[title] || [];
+    if (!items.length) return;
+
+    const uniqueTimes = Array.from(new Set(items.map((i) => i.time)));
+
+    setSelectedActivityTitle(title);
+    setActivityItems(items);
+    setTimeOptions(uniqueTimes);
+    setSelectedTimeIndex(0);
+
     setForm(INITIAL_FORM);
     setStatus(null);
     setIsModalOpen(true);
@@ -453,7 +464,10 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
   const closeModal = () => {
     if (isSubmitting) return;
     setIsModalOpen(false);
-    setSelectedClass(null);
+    setSelectedActivityTitle(null);
+    setActivityItems([]);
+    setTimeOptions([]);
+    setSelectedTimeIndex(0);
     setForm(INITIAL_FORM);
     setStatus(null);
   };
@@ -481,11 +495,26 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
     }));
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTimeIndex(Number(e.target.value));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus(null);
 
-    if (!selectedClass) return;
+    if (!selectedActivityTitle || !activityItems.length) return;
+
+    // 🔹 wszystkie dni dla tego typu zajęć (np. [2,4] → Wtorek/Czwartek)
+    const uniqueDays = Array.from(new Set(activityItems.map((i) => i.day)));
+    const dayLabel = uniqueDays.map((d) => daysMap[d]).join(" / ");
+
+    // 🔹 wybrana godzina z selecta
+    const chosenTime =
+      timeOptions[selectedTimeIndex] || timeOptions[0] || activityItems[0].time;
+
+    // do "date" bierzemy pierwszy dzień (najwcześniejszy numerowo)
+    const firstDay = uniqueDays.sort((a, b) => a - b)[0];
 
     if (!form.rodo) {
       setStatus({
@@ -513,10 +542,10 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
 
     const payload = {
       section: sectionName,
-      group: selectedClass.title,
-      day: daysMap[selectedClass.day],
-      time: selectedClass.time,
-      date: getNextClassDate(selectedClass.day, selectedClass.time),
+      group: selectedActivityTitle, // typ zajęć
+      day: dayLabel, // np. "Wtorek / Czwartek"
+      time: chosenTime, // wybrana godzina
+      date: getNextClassDate(firstDay, chosenTime),
       parentName: form.parentName,
       childName: form.childName,
       childYear: form.childYear,
@@ -544,9 +573,7 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
       setForm(INITIAL_FORM);
 
       setTimeout(() => {
-        setIsModalOpen(false);
-        setSelectedClass(null);
-        setStatus(null);
+        closeModal();
       }, 3500);
     } catch (err: any) {
       console.error(err);
@@ -559,10 +586,15 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
     }
   };
 
+  // pomocniczo do wyświetlania w popupie
+  const popupDaysLabel = activityItems.length
+    ? Array.from(new Set(activityItems.map((i) => daysMap[i.day]))).join(" / ")
+    : "";
+
   return (
     <>
       <Wrapper>
-        <Title>Kalendarz zajęć – Sekcja {sectionName}</Title>
+        <Title>Zajęcia – Sekcja {sectionName}</Title>
 
         <Info>
           <p>
@@ -576,32 +608,35 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
         </Info>
 
         <DaysWrapper>
-          {Object.entries(grouped).map(([dayKey, activities]) => (
-            <DayCard key={dayKey}>
-              <DayTitle>{daysMap[Number(dayKey)]}</DayTitle>
-              <List>
-                {activities.map((act, i) => (
-                  <Item key={i}>
-                    <strong>{act.title}</strong>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "8px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Time>{act.time}</Time>
-                      <Button onClick={() => openModal(act)}>Zapisz się</Button>
-                    </div>
-                  </Item>
-                ))}
-              </List>
-            </DayCard>
-          ))}
+          {Object.entries(groupedByTitle).map(([title, items]) => {
+            const days = Array.from(new Set(items.map((i) => i.day)));
+            const times = Array.from(new Set(items.map((i) => i.time)));
+
+            const daysLabel = days.map((d) => daysMap[d]).join(" / ");
+            const timesLabel = times.length === 1 ? times[0] : times.join(", ");
+
+            return (
+              <ActivityCard key={title}>
+                <ActivityTitle>{title}</ActivityTitle>
+                <ActivityMeta>
+                  <span className="label">Dni zajęć:</span> {daysLabel}
+                </ActivityMeta>
+                <ActivityMeta>
+                  <span className="label">
+                    {times.length > 1 ? "Godziny:" : "Godzina:"}
+                  </span>{" "}
+                  {timesLabel}
+                </ActivityMeta>
+                <ActivityFooter>
+                  <Button onClick={() => openModal(title)}>Zapisz się</Button>
+                </ActivityFooter>
+              </ActivityCard>
+            );
+          })}
         </DaysWrapper>
       </Wrapper>
 
-      {isModalOpen && selectedClass && (
+      {isModalOpen && selectedActivityTitle && (
         <ModalOverlay onClick={closeModal}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <ModalHeader>
@@ -609,14 +644,29 @@ export const CalendarSection: React.FC<CalendarSectionProps> = ({
               <ModalSubtitle>
                 <strong>Sekcja:</strong> {sectionName}
                 <br />
-                <strong>Grupa:</strong> {selectedClass.title}
+                <strong>Grupa:</strong> {selectedActivityTitle}
                 <br />
-                <strong>Dzień:</strong> {daysMap[selectedClass.day]}{" "}
-                <strong>Godz.</strong> {selectedClass.time}
+                <strong>Dni:</strong> {popupDaysLabel}
               </ModalSubtitle>
             </ModalHeader>
 
             <Form onSubmit={handleSubmit}>
+              {timeOptions.length > 0 && (
+                <Field>
+                  <Label>Wybierz godzinę zajęć *</Label>
+                  <Select
+                    value={selectedTimeIndex}
+                    onChange={handleSelectChange}
+                  >
+                    {timeOptions.map((t, idx) => (
+                      <option key={t + idx} value={idx}>
+                        {t}
+                      </option>
+                    ))}
+                  </Select>
+                </Field>
+              )}
+
               <Field>
                 <Label>Imię i nazwisko rodzica / opiekuna *</Label>
                 <Input

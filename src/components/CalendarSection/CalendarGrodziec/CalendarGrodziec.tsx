@@ -1,6 +1,13 @@
 import React from "react";
 import CalendarSection, { type IClassItem } from "../CalendarSection";
+import styled from "styled-components";
+import SectionScheduleCalendar from "../../SectionScheduleCalendar/SectionScheduleCalendar";
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
 export const grodziecSchedule: IClassItem[] = [
   // wtorek (2)
   { title: "Gimnastyka sportowa 5–7 lat", time: "16:00–16:45", day: 2 },
@@ -13,14 +20,20 @@ export const grodziecSchedule: IClassItem[] = [
 ];
 
 export const CalendarGrodziec = () => (
-  <CalendarSection
-    sectionName="Grodziec"
-    location="Szkoła Podstawowa w Grodzću
+  <Wrapper>
+    <CalendarSection
+      sectionName="Grodziec"
+      location="Szkoła Podstawowa w Grodzću
 Sala gimnastyczna (mała salka)
 Pl. Ks. Abp. B. Dąbrowskiego 4"
-    contactName="Michał Gaj"
-    phone="782 560 182"
-    email="michalg87@op.pl"
-    schedule={grodziecSchedule}
-  />
+      contactName="Michał Gaj"
+      phone="782 560 182"
+      email="michalg87@op.pl"
+      schedule={grodziecSchedule}
+    />
+    <SectionScheduleCalendar
+      sectionName="Grodziec"
+      schedule={grodziecSchedule}
+    />
+  </Wrapper>
 );

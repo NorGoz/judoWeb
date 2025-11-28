@@ -1,5 +1,13 @@
 import React from "react";
 import CalendarSection, { type IClassItem } from "../CalendarSection";
+import styled from "styled-components";
+import SectionScheduleCalendar from "../../SectionScheduleCalendar/SectionScheduleCalendar";
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
 
 export const stawiszynSchedule: IClassItem[] = [
   // wtorek (2)
@@ -12,12 +20,18 @@ export const stawiszynSchedule: IClassItem[] = [
 ];
 
 export const CalendarStawiszyn = () => (
-  <CalendarSection
-    sectionName="Stawiszyn"
-    location="Szkoła Podstawowa w Stawiszynie Sala gimnastyczna ul. Szkolna 8"
-    contactName="Michał Gaj"
-    phone="782 560 182"
-    email="michalg87@op.pl"
-    schedule={stawiszynSchedule}
-  />
+  <Wrapper>
+    <CalendarSection
+      sectionName="Stawiszyn"
+      location="Szkoła Podstawowa w Stawiszynie Sala gimnastyczna ul. Szkolna 8"
+      contactName="Michał Gaj"
+      phone="782 560 182"
+      email="michalg87@op.pl"
+      schedule={stawiszynSchedule}
+    />
+    <SectionScheduleCalendar
+      sectionName="Stawiszyn"
+      schedule={stawiszynSchedule}
+    />
+  </Wrapper>
 );
